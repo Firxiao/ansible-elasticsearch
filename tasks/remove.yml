@@ -1,0 +1,18 @@
+---
+
+- name: remove | sending sigterm to any running elasticsearch processes
+  shell: pkill -u {{ES_USER}} || true
+
+- name: remove| remove jre
+  yum: name={{ item }} state=absent
+  with_items:
+      - jre
+
+- name: remove | rm /opt/elasticsearch*
+  file: path={{ ES_HOME }} state=directory state=absent
+
+- name: remove | rm /opt/elasticsearch*
+  file: path={{ elasticsearch_zip_name }} state=directory state=absent
+
+- name: remove| reboot server
+  shell: reboot

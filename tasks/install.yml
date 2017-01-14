@@ -1,0 +1,35 @@
+---
+- name: install |  get rpm name
+  shell: (cd /opt/ansible; find . -maxdepth 1 -type f -name "*.rpm" ) | cut -d'/' -f2
+  register: rpm_lists
+
+- name: install |  install rpm
+  yum: name=/opt/ansible/{{ item }}  state=present
+  with_items: "{{rpm_lists.stdout_lines}}"
+
+
+
+- name: install | create syslink
+  file: src=/opt/{{elasticsearch_zip_name}} dest={{ ES_HOME }} owner={{ ES_USER }} group={{ ES_USER }} state=link
+
+- name: install | create dir
+  file: path={{ ES_HOME }}/{{ item }} state=directory
+  with_items:
+      - logs
+      - data
+- name: install | config elasticsearch.yml
+  template: src=elasticsearch.yml.j2 dest={{ ES_HOME }}/config/elasticsearch.yml owner={{ ES_USER }} group={{ ES_USER }} 
+
+- name: install | chow elasticsearch 
+  file: path={{ ES_HOME }} owner={{ ES_USER}} group={{ ES_USER }}  recurse=yes state=directory follow=yes
+  #shell: chown -R {{ ES_USER}}. {{ ES_HOME }}
+  tags: chown
+
+  
+- name: install | install elasticsearch service script
+  template: src=elasticsearch.j2 dest=/etc/init.d/elasticsearch mode=755
+
+
+- name: install |  ensure service running and onboot
+  service: name=elasticsearch state=running enabled=yes
+

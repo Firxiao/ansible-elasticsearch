@@ -1,0 +1,3 @@
+---
+- name: clean | clean temp directory
+  file: path=/opt/ansible state=directory state=absent

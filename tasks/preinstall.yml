@@ -1,0 +1,23 @@
+--- 
+
+- name: preinstall |  create /opt/ansible for temp
+  file: path=/opt/ansible state=directory mode=0755
+
+- name: preinstall |  upload jre
+  copy:
+    src: "{{ jre_rpm }}"
+    dest: /opt/ansible
+  when: jre_rpm 
+
+- name: preinstall | install unzip
+  yum: name=unzip state=present
+
+- name: preinstall | add elasticsearch user
+  user: name={{ES_USER}} state=present createhome=no comment="elasticsearch user" system=yes shell=/sbin/nologin-
+
+- name: preinstall | config limit
+  lineinfile: dest=/etc/security/limits.conf line="{{ ES_USER }}    -       nproc           4096"
+
+- name: preinstall | unarchive elasticsearch.zip
+  unarchive: src={{elasticsearch_zip }} dest=/opt/
+
