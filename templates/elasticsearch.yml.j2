@@ -51,7 +51,6 @@ cluster.name: {{ cluster_name }}
 #
 # Set the bind address to a specific IP (IPv4 or IPv6):
 #
-#network.host: {{ ansible_eth1.ipv4.address }}
 network.host: {{ ansible_default_ipv4.address }}
 #
 # Set a custom port for HTTP:
