@@ -7,10 +7,13 @@
   tags:
     - install
 
-
 - include: clean.yml
   tags:
     - clean
+- include: monit.yml
+  tags:
+    - monit
+
 - include: remove.yml
   tags:
     - remove

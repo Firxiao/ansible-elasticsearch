@@ -7,8 +7,6 @@
   yum: name=/opt/ansible/{{ item }}  state=present
   with_items: "{{rpm_lists.stdout_lines}}"
 
-
-
 - name: install | create syslink
   file: src=/opt/{{elasticsearch_zip_name}} dest={{ ES_HOME }} owner={{ ES_USER }} group={{ ES_USER }} state=link
 
